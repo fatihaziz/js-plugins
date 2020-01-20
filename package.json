@@ -1,0 +1,33 @@
+{
+  "name": "deedcodes",
+  "version": "1.0.0",
+  "description": "Self-developed plugins",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fatih-aziz/js-plugins.git"
+  },
+  "keywords": [
+    "javascripts",
+    "node",
+    "js",
+    "plugins",
+    "form",
+    "helper",
+    "portfolio",
+    "projects"
+  ],
+  "author": "Fatih Aziz",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/fatih-aziz/js-plugins/issues"
+  },
+  "homepage": "https://github.com/fatih-aziz/js-plugins#readme",
+  "dependencies": {
+    "jquery": "^3.4.1",
+    "yarn": "^1.21.1"
+  }
+}

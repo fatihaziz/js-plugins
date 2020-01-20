@@ -1,64 +1,4 @@
-$(() => {
-	$.extend({
-		newsletter: {
-
-			_: ($opts) => {
-				return $.newsletter.init($opts)
-			},
-
-			init: ($opts) => {
-				let $targetUrl = "/subscribe";
-				if ($opts.form) {
-					$.newsletter = Object.assign($.newsletter, $opts);
-					$.newsletter.targetUrl = $opts.targetUrl ? $opts.targetUrl : $targetUrl;
-
-					if ($.newsletter.handleSubmit) {
-						$.newsletter.form.submit(e => {
-							e.preventDefault();
-							$.newsletter.submit()
-						})
-					}
-				}
-				return false;
-			},
-			data: ($form = null) => {
-				$form = $form ? $form : $.newsletter.form;
-				$form = $($form).prop("tagName") == "FORM" ? $($form) : $($form).find('form');
-				if (!formHelper)
-					throw new Error('formhelper plugin needed!')
-				let $data = formHelper.getData($form)
-				return $data
-			},
-			submit: ($form = null) => {
-				$data = $.newsletter.data($form);
-				if (!$data.email) {
-					if ($.newsletter.onFail instanceof Function)
-						$.newsletter.onFail({
-							error: 'Required Email'
-						})
-					else
-						throw Error("email needed")
-				} else
-					$.ajax({
-						method: "POST",
-						dataType: "json",
-						crossDomain: true,
-						url: $.newsletter.targetUrl,
-						data: $data
-					})
-					.done((res) => {
-						if ($.newsletter.onSuccess instanceof Function)
-							$.newsletter.onSuccess(res)
-					})
-					.fail((err) => {
-						if ($.newsletter.onFail instanceof Function)
-							$.newsletter.onFail(err)
-					})
-			}
-		}
-	})
-})
-
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 /**
  *
  * Class for helping collect data as object
@@ -194,7 +134,7 @@ var formHelper = {
 
 	/**
 	 *
-	 * objectify array
+	 * objectify serialized array
 	 *
 	 * @param  {} formArray
 	 */
@@ -209,3 +149,72 @@ var formHelper = {
 		return returnArray;
 	}
 }
+
+},{}],2:[function(require,module,exports){
+const formObj = require('./form-objectify')
+const newsletter = require('./newsletter')
+
+console.log(formObj)
+console.log(newsletter)
+},{"./form-objectify":1,"./newsletter":3}],3:[function(require,module,exports){
+$(() => {
+	$.extend({
+		newsletter: {
+
+			_: ($opts) => {
+				return $.newsletter.init($opts)
+			},
+
+			init: ($opts) => {
+				let $targetUrl = "/subscribe";
+				if ($opts.form) {
+					$.newsletter = Object.assign($.newsletter, $opts);
+					$.newsletter.targetUrl = $opts.targetUrl ? $opts.targetUrl : $targetUrl;
+
+					if ($.newsletter.handleSubmit) {
+						$.newsletter.form.submit(e => {
+							e.preventDefault();
+							$.newsletter.submit()
+						})
+					}
+				}
+				return false;
+			},
+			data: ($form = null) => {
+				$form = $form ? $form : $.newsletter.form;
+				$form = $($form).prop("tagName") == "FORM" ? $($form) : $($form).find('form');
+				if (!formHelper)
+					throw new Error('formhelper plugin needed!')
+				let $data = formHelper.getData($form)
+				return $data
+			},
+			submit: ($form = null) => {
+				$data = $.newsletter.data($form);
+				if (!$data.email) {
+					if ($.newsletter.onFail instanceof Function)
+						$.newsletter.onFail({
+							error: 'Required Email'
+						})
+					else
+						throw Error("email needed")
+				} else
+					$.ajax({
+						method: "POST",
+						dataType: "json",
+						crossDomain: true,
+						url: $.newsletter.targetUrl,
+						data: $data
+					})
+					.done((res) => {
+						if ($.newsletter.onSuccess instanceof Function)
+							$.newsletter.onSuccess(res)
+					})
+					.fail((err) => {
+						if ($.newsletter.onFail instanceof Function)
+							$.newsletter.onFail(err)
+					})
+			}
+		}
+	})
+})
+},{}]},{},[2]);
