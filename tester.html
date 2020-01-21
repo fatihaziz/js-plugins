@@ -1,1 +1,32 @@
-<script src="index-bundle.js"></script>
+<body>
+    <form action="#" method="post" class="newsletter">
+        <input type="text" name="name" id="">
+        <input type="text" name="email" id="">
+        <input type="text" name="phone" id="">
+        <input type="checkbox" name="join" id="">
+    </form>
+    <form action="#" method="post" class="newsletter">
+        <input type="text" name="input21" id="">
+        <input type="text" name="input22" id="">
+        <input type="text" name="input23" id="">
+    </form>
+    <form action="#" method="post" class="">
+        <input type="text" name="input31" id="">
+        <input type="text" name="input32" id="">
+        <input type="text" name="input33" id="">
+    </form>
+</body>
+<script src="./node_modules/jquery/dist/jquery.min.js"></script>
+<script src="./src/form-objectify.js"></script>
+<script src="./src/newsletter.js"></script>
+<script>
+    $(() => {
+        $('.newsletter').formObjectify({
+            data: {
+                name: "wahyu",
+                email: "wahyu@gmail.com",
+                join: true
+            }
+        })
+    })
+</script>
