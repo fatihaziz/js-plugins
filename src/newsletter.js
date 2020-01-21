@@ -1,59 +1,84 @@
+/**
+ *
+ * Newsletter hadnler
+ * send email to spesifiec endpoint automatically
+ *
+ * Author: Fatih Aziz
+ * date: 14 Jan 2020
+ * last update: 21 Jan 2020
+ * repo: https://github.com/fatih-aziz/js-plugins
+ * licence: GNU General Public License v3.0
+ */
+
 $(() => {
-	$.extend({
-		newsletter: {
+	$.fn.extend({
+		newsletter: function ($opts) {
 
-			_: ($opts) => {
-				return $.newsletter.init($opts)
-			},
-
-			init: ($opts) => {
-				let $targetUrl = "/subscribe";
-				if ($opts.form) {
-					$.newsletter = Object.assign($.newsletter, $opts);
-					$.newsletter.targetUrl = $opts.targetUrl ? $opts.targetUrl : $targetUrl;
-
-					if ($.newsletter.handleSubmit) {
-						$.newsletter.form.submit(e => {
-							e.preventDefault();
-							$.newsletter.submit()
-						})
-					}
-				}
-				return false;
-			},
-			data: ($form = null) => {
-				$form = $form ? $form : $.newsletter.form;
-				$form = $($form).prop("tagName") == "FORM" ? $($form) : $($form).find('form');
-				if (!formHelper)
-					throw new Error('formhelper plugin needed!')
-				let $data = formHelper.getData($form)
+			const formData = ($form = null) => {
+				if (!$($form).formObjectify)
+					throw new Error('formObjectify plugin not found!')
+				let $data = $($form).formObjectify().val
 				return $data
-			},
-			submit: ($form = null) => {
-				$data = $.newsletter.data($form);
+			}
+
+			const submit = ($form = null) => {
+				$data = formData($form)
 				if (!$data.email) {
-					if ($.newsletter.onFail instanceof Function)
-						$.newsletter.onFail({
+					if ($opts && $opts.onFail instanceof Function)
+						$opts.onFail({
 							error: 'Required Email'
 						})
-					else
-						throw Error("email needed")
 				} else
 					$.ajax({
 						method: "POST",
 						dataType: "json",
 						crossDomain: true,
-						url: $.newsletter.targetUrl,
+						url: $targetUrl,
 						data: $data
 					})
 					.done((res) => {
-						if ($.newsletter.onSuccess instanceof Function)
-							$.newsletter.onSuccess(res)
+						if ($opts && $opts.onSuccess instanceof Function)
+							$opts.onSuccess(res)
 					})
 					.fail((err) => {
-						if ($.newsletter.onFail instanceof Function)
-							$.newsletter.onFail(err)
+						if ($opts && $opts.onFail instanceof Function)
+							$opts.onFail(err)
 					})
+			}
+
+			let $targetUrl = "/subscribe";
+			$targetUrl = $opts && $opts.targetUrl ? $opts.targetUrl : $targetUrl;
+
+			if (this.length > 1) {
+				let $optArr = []
+				$(this).each((i, el) => {
+					// let $el = $(el);
+					$optArr[i] = {
+						data: formData(el),
+						submit: submit(el),
+						targetUrl: $targetUrl
+					}
+					if ($opts && $opts.handleSubmit) {
+						$(el).submit(function (e) {
+							e.preventDefault();
+							submit(this)
+						})
+					}
+				})
+				return $optArr
+			} else {
+				$opts = $.extend({
+					data: formData(this),
+					submit: submit(this),
+					targetUrl: $targetUrl
+				}, $opts)
+				if ($opts.handleSubmit) {
+					$(this).submit(e => {
+						e.preventDefault();
+						submit(this)
+					})
+				}
+				return $opts;
 			}
 		}
 	})

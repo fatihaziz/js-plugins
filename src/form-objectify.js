@@ -6,7 +6,8 @@
  * Author: Fatih Aziz
  * date: 14 Jan 2020
  * last update: 21 Jan 2020
- * https://github.com/fatih-aziz
+ * repo: https://github.com/fatih-aziz/js-plugins
+ * licence: GNU General Public License v3.0
  */
 
 $(() => {
